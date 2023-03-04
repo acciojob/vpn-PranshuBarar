@@ -123,6 +123,7 @@ public class ConnectionServiceImpl implements ConnectionService {
                 if(serviceProvider.getId()<minServiceProviderId){
                     countrySenderIsToBeConnected = serviceProvider.getCountryList().get(0);
                     serviceProviderForSender = serviceProvider;
+                    minServiceProviderId = serviceProvider.getId(); ///This was the place I got stuck for 4 hours :)
                 }
             }
             if(serviceProviderForSender == null || countrySenderIsToBeConnected == null){
