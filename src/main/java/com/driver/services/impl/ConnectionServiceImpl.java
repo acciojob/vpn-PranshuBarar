@@ -126,7 +126,7 @@ public class ConnectionServiceImpl implements ConnectionService {
                 }
             }
             if(serviceProviderForSender == null || countrySenderIsToBeConnected == null){
-                throw new Exception("Country not found");
+                throw new Exception("Cannot establish communication");
             }
             sender.setConnected(true);
             sender.setOriginalCountry(countrySenderIsToBeConnected);
