@@ -23,10 +23,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(String username, String password, String countryName) throws Exception{
+//        if(!caseIgnoreCheckAndEnumCheck(countryName)){
+//            throw new Exception();
+//        }
 
         Country country = new Country();
-        country.setCountryName(CountryName.valueOf(countryName));
-        country.setCode(CountryName.valueOf(countryName).toCode());
+        country.setCountryName(CountryName.valueOf(countryName.toUpperCase()));
+        country.setCode(CountryName.valueOf(countryName.toUpperCase()).toCode());
 
         User user = new User();
         user.setPassword(password);
@@ -48,5 +51,14 @@ public class UserServiceImpl implements UserService {
         user.getServiceProviderList().add(serviceProvider);
 
         return userRepository3.save(user);
+    }
+
+    public boolean caseIgnoreCheckAndEnumCheck(String countryName){
+        for (CountryName countryName1 : CountryName.values()) {
+            if (countryName1.name().equals(countryName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
