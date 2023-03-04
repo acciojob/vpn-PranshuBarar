@@ -19,6 +19,7 @@ public class ServiceProvider {
     Admin admin;
 
     @ManyToMany
+    @JoinColumn
     List<User> users =  new ArrayList<>();
 
     @OneToMany(mappedBy = "serviceProvider", cascade = CascadeType.ALL)
