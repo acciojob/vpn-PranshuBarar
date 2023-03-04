@@ -91,8 +91,8 @@ public class ConnectionServiceImpl implements ConnectionService {
         user.getConnectionList().clear();
         user.getServiceProviderList().clear();
         user.setOriginalCountry(returnCountry(user.getOriginalIp().substring(0,3)));
-        List<ServiceProvider> serviceProviderListOfThisUser = user.getServiceProviderList();
-        serviceProviderListOfThisUser.clear();
+        user.getServiceProviderList().clear();
+        user.getConnectionList().clear();
 
 //        List<ServiceProvider> serviceProviderListToWhomUserIsConnectedTo = user.getServiceProviderList();
 //        for(ServiceProvider serviceProvider : serviceProviderListToWhomUserIsConnectedTo){
@@ -105,10 +105,6 @@ public class ConnectionServiceImpl implements ConnectionService {
 ////                }
 ////            }
 //        }
-
-
-        List<Connection> connectionListOfThisUser = user.getConnectionList();
-        connectionListOfThisUser.clear();
 
         userRepository2.save(user);
         return user;

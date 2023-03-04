@@ -42,7 +42,6 @@ public class UserServiceImpl implements UserService {
         user.setOriginalCountry(country);//
         user.setConnected(false);//
         user.setMaskedIp(null);//
-
         country.setUser(user);
 //        Country country1 = countryRepository3.save(country);
 //        int id = country1.getUser().getId();
@@ -61,7 +60,8 @@ public class UserServiceImpl implements UserService {
         user.getServiceProviderList().add(serviceProvider);
 
 
-        return userRepository3.save(user);
+        userRepository3.save(user);
+        return user;
     }
 
     public boolean caseIgnoreCheckAndEnumCheck(String countryName){
