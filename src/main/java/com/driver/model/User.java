@@ -27,8 +27,7 @@ public class User {
     @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
     List<ServiceProvider> serviceProviderList = new ArrayList<>();
 
-    @OneToOne
-    @JoinColumn
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     Country originalCountry;
 
     public User() {

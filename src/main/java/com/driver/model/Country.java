@@ -15,7 +15,8 @@ public class Country{
 
     private String code;
 
-    @OneToOne(mappedBy = "originalCountry", cascade = CascadeType.ALL)
+    @OneToOne
+    @JoinColumn
     User user;
 
     @ManyToOne
