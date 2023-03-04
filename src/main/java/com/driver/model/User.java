@@ -28,12 +28,12 @@ public class User {
 
     @OneToOne
     @JoinColumn
-    Country country;
+    Country originalCountry;
 
     public User() {
     }
 
-    public User(int id, String username, String password, String originalIp, String maskedIp, boolean connected, List<Connection> connectionList, List<ServiceProvider> serviceProviderList, Country country) {
+    public User(int id, String username, String password, String originalIp, String maskedIp, boolean connected, List<Connection> connectionList, List<ServiceProvider> serviceProviderList, Country originalCountry) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -42,7 +42,7 @@ public class User {
         this.connected = connected;
         this.connectionList = connectionList;
         this.serviceProviderList = serviceProviderList;
-        this.country = country;
+        this.originalCountry = originalCountry;
     }
 
     public int getId() {
@@ -109,11 +109,11 @@ public class User {
         this.serviceProviderList = serviceProviderList;
     }
 
-    public Country getCountry() {
-        return country;
+    public Country getOriginalCountry() {
+        return originalCountry;
     }
 
-    public void setCountry(Country country) {
-        this.country = country;
+    public void setOriginalCountry(Country originalCountry) {
+        this.originalCountry = originalCountry;
     }
 }

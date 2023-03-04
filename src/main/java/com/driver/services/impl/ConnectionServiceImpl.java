@@ -25,7 +25,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         if(user.getConnected()){
             throw new Exception("Already connected");
         }
-        String countryOfUser = user.getCountry().getCountryName().toString();
+        String countryOfUser = user.getOriginalCountry().getCountryName().toString();
         if(countryOfUser.equalsIgnoreCase(countryName)){
             return user;
         }
@@ -53,7 +53,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         if(!anyOneOfTheServiceProviderHasThisCountry){
             throw new Exception("Unable to connect");
         }
-        user.setCountry(countryProviderServes);
+        user.setOriginalCountry(countryProviderServes);
 
         user.setMaskedIp(CountryName.valueOf(countryName).toCode()+"."+nameOfServiceProviderServingThisCountry+"."+userId);
         return userRepository2.save(user);
@@ -93,8 +93,8 @@ public class ConnectionServiceImpl implements ConnectionService {
         User sender = userRepository2.findById(senderId).get();
         User receiver = userRepository2.findById(receiverId).get();
 
-        Country currCountryOfReceiver = receiver.getCountry();
-        Country countryOfSender  = sender.getCountry();
+        Country currCountryOfReceiver = receiver.getOriginalCountry();
+        Country countryOfSender  = sender.getOriginalCountry();
 
         if(!currCountryOfReceiver.getCode().equalsIgnoreCase(countryOfSender.getCode())){
             //Sender is not connected this time to any vpn
@@ -110,7 +110,7 @@ public class ConnectionServiceImpl implements ConnectionService {
                 }
             }
             sender.setConnected(true);
-            sender.setCountry(countrySenderIsToBeConnected);
+            sender.setOriginalCountry(countrySenderIsToBeConnected);
             userRepository2.save(sender);
         }
         else {
