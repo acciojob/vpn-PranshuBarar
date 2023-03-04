@@ -40,7 +40,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         }
         List<ServiceProvider> serviceProviderListOfUser = user.getServiceProviderList();
         boolean anyOneOfTheServiceProviderHasThisCountry = false;
-        String nameOfServiceProviderServingThisCountry = "";
+        String nameOfServiceProviderServingThisCountry = null;
         Country countryProviderServes = null;
         int idOfThisServiceProvider = Integer.MAX_VALUE;
         for(ServiceProvider serviceProvider : serviceProviderListOfUser){
