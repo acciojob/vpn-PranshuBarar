@@ -100,7 +100,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         Country currCountryOfReceiver = receiver.getOriginalCountry();
         Country countryOfSender  = sender.getOriginalCountry();
 
-        if(!currCountryOfReceiver.getCode().equalsIgnoreCase(countryOfSender.getCode())){
+        if(!currCountryOfReceiver.getCode().equals(countryOfSender.getCode())){
             //Sender is not connected this time to any vpn
             List<ServiceProvider> listOfServiceProviderReceiverIsConnectedTo = receiver.getServiceProviderList();
             if(listOfServiceProviderReceiverIsConnectedTo.isEmpty()){
@@ -115,13 +115,11 @@ public class ConnectionServiceImpl implements ConnectionService {
             }
             sender.setConnected(true);
             sender.setOriginalCountry(countrySenderIsToBeConnected);
-            userRepository2.save(sender);
+            return userRepository2.save(sender);
         }
         else {
             return sender;
         }
-
-        throw new Exception("Cannot establish communication");
 
     }
 
