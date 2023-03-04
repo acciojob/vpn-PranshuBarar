@@ -25,12 +25,12 @@ public class ConnectionServiceImpl implements ConnectionService {
         if(user.getConnected()){
             throw new Exception("Already connected");
         }
-        if(!caseIgnoreCheckAndEnumCheck(countryName)){
-            throw new Exception("Unable to connect");
-        }
         String countryOfUser = user.getOriginalCountry().getCountryName().toString();
         if(countryOfUser.equalsIgnoreCase(countryName)){
             return user;
+        }
+        if(!caseIgnoreCheckAndEnumCheck(countryName)){
+            throw new Exception("Unable to connect");
         }
 
         if(user.getServiceProviderList().isEmpty()){
