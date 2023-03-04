@@ -70,6 +70,9 @@ public class AdminServiceImpl implements AdminService {
 
     public boolean caseIgnoreCheckAndEnumCheck(String countryName){
         for (CountryName countryName1 : CountryName.values()) {
+            if(!countryName.chars().allMatch(Character::isLowerCase) && !countryName.chars().allMatch(Character::isUpperCase)){
+                return false;
+            }
             if (countryName1.name().equalsIgnoreCase(countryName)) {
                 return true;
             }
