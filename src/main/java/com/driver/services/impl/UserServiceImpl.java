@@ -23,70 +23,54 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(String username, String password, String countryName) throws Exception{
-        //create a user of given country. The originalIp of the user should be "countryCode.userId" and return the user.
-        // Note that right now user is not connected and thus connected would be false and maskedIp would be null
+//        if(!caseIgnoreCheckAndEnumCheck(countryName)){
+//            throw new Exception();
+//        }
 
-        User user=new User();
-        //setting the attribute of user
-        user.setUsername(username);
-        user.setPassword(password);
-
-        //creating new country object based on countryname
-        Country country=new Country();
-
-        if(countryName.equalsIgnoreCase("IND")){
-            country.setCountryName(CountryName.IND);
-            country.setCode(CountryName.IND.toCode());
+        Country country = new Country();
+        if(!caseIgnoreCheckAndEnumCheck(countryName.toUpperCase().substring(0,3))){
+            throw new Exception();
         }
-        else if(countryName.equalsIgnoreCase("AUS")){
-            country.setCountryName(CountryName.AUS);
-            country.setCode(CountryName.AUS.toCode());
-        } else if (countryName.equalsIgnoreCase("USA")) {
-            country.setCountryName(CountryName.USA);
-            country.setCode(CountryName.USA.toCode());
-        }
-        else if(countryName.equalsIgnoreCase("CHI")){
-            country.setCountryName(CountryName.CHI);
-            country.setCode(CountryName.CHI.toCode());
-        } else if (countryName.equalsIgnoreCase("JPN")) {
-            country.setCountryName(CountryName.JPN);
-            country.setCode(CountryName.JPN.toCode());
-        }
-        else{
-            throw new Exception("Country not found");
-        }
-
-//        user=userRepository3.save(user);
-
-        country.setUser(user); //setting the foreign key of country
-//        country=countryRepository3.save(country);
-
-        user.setOriginalCountry(country);
-        user.setConnected(false);
+        country.setCountryName(CountryName.valueOf(countryName.toUpperCase().substring(0,3)));
+        country.setCode(CountryName.valueOf(countryName.toUpperCase().substring(0,3)).toCode());
 
 
-        String currentCode=country.getCode()+"."+userRepository3.save(user).getId();
-        user.setOriginalIp(currentCode);
 
-        userRepository3.save(user);
+        User user = new User();
+        user.setPassword(password);//
+        user.setUsername(username);//
+        user.setOriginalCountry(country);//
+        user.setConnected(false);//
+        user.setMaskedIp(null);//
 
-        return user;
+        country.setUser(user);
+//        Country country1 = countryRepository3.save(country);
+//        int id = country1.getUser().getId();
+
+
+        User userFromRepo = userRepository3.save(user);
+        userFromRepo.setOriginalIp(country.getCode()+"."+userFromRepo.getId());
+        return userFromRepo;
+
     }
 
     @Override
     public User subscribe(Integer userId, Integer serviceProviderId) {
-        //subscribe to the serviceProvider by adding it to the list of providers and return updated User
+        User user = userRepository3.findById(userId).get();
 
-        User user=userRepository3.findById(userId).get();
-
-        ServiceProvider serviceProvider=serviceProviderRepository3.findById(serviceProviderId).get();
-
+        ServiceProvider serviceProvider = serviceProviderRepository3.findById(serviceProviderId).get();
         user.getServiceProviderList().add(serviceProvider);
-        serviceProvider.getUsers().add(user);
 
-        userRepository3.save(user);
-//        serviceProviderRepository3.save(serviceProvider); //doubt
 
-        return user;
+        return userRepository3.save(user);
+    }
+
+    public boolean caseIgnoreCheckAndEnumCheck(String countryName){
+        for (CountryName countryName1 : CountryName.values()) {
+            if (countryName1.name().equals(countryName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

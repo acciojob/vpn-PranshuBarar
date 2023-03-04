@@ -21,160 +21,130 @@ public class ConnectionServiceImpl implements ConnectionService {
 
     @Override
     public User connect(int userId, String countryName) throws Exception{
-        //1. If the user is already connected to any service provider, throw "Already connected" exception.
-        //2. Else if the countryName corresponds to the original country of the user, do nothing. This means that
-        // the user wants to connect to its original country, for which we do not require a connection. Thus, return the user as it is.
-        //3. Else, the user should be subscribed under a serviceProvider having option to connect to the given country.
-        User user=userRepository2.findById(userId).get();
-
-        if(user.getMaskedIp()!=null){ //user.getMaskedIp!=null
+        User user = userRepository2.findById(userId).get();
+        if(user.getConnected()){
             throw new Exception("Already connected");
         }
-        else if (countryName.equalsIgnoreCase(user.getOriginalCountry().getCountryName().toString())){
+        String countryOfUser = user.getOriginalCountry().getCountryName().toString();
+        if(countryOfUser.equalsIgnoreCase(countryName)){
             return user;
         }
-        else {
-            //If the connection can not be made (As user does not have a serviceProvider or serviceProvider does not have given country,
-            // throw "Unable to connect" exception.
-            //Else, establish the connection where the maskedIp is "updatedCountryCode.serviceProviderId.userId" and return the updated user.
-            // If multiple service providers allow you to connect to the country, use the service provider having smallest id.
-            if(user.getServiceProviderList().size()==0){
-                throw new Exception("Unable to connect");
-            }
+//        if(!caseIgnoreCheckAndEnumCheck(countryName)){
+//            throw new Exception("Unable to connect");
+//        }
 
-            List<ServiceProvider>serviceProviderList=user.getServiceProviderList();
-            int a=Integer.MAX_VALUE;
-            ServiceProvider serviceProvider=null;
-            Country country=null;
-
-            Boolean flag=false;
-
-            //traversing each service providers
-            for(ServiceProvider serviceProvider1: serviceProviderList){
-
-                List<Country>countryList=serviceProvider1.getCountryList();
-                //traversing each country of service provider
-                for(Country country1: countryList){
-                    if(countryName.equalsIgnoreCase(country1.getCountryName().toString()) && a>serviceProvider1.getId()){
-                        a=serviceProvider1.getId();
-                        serviceProvider=serviceProvider1;
-                        country=country1;
-
-                        flag=true;
+        if(user.getServiceProviderList().isEmpty()){
+            throw new Exception("Unable to connect");
+        }
+        List<ServiceProvider> serviceProviderListOfUser = user.getServiceProviderList();
+        boolean anyOneOfTheServiceProviderHasThisCountry = false;
+        String nameOfServiceProviderServingThisCountry = "";
+        Country countryProviderServes = null;
+        int idOfThisServiceProvider = Integer.MAX_VALUE;
+        for(ServiceProvider serviceProvider : serviceProviderListOfUser){
+            for(Country countryThisProviderServes : serviceProvider.getCountryList()){
+                if(countryThisProviderServes.getCountryName().toString().equalsIgnoreCase(countryName) && serviceProvider.getId()<idOfThisServiceProvider){
+                    if(!anyOneOfTheServiceProviderHasThisCountry){
+                        anyOneOfTheServiceProviderHasThisCountry = true;
                     }
+                    countryProviderServes = countryThisProviderServes;
+                    nameOfServiceProviderServingThisCountry = serviceProvider.getName();
+                    idOfThisServiceProvider = serviceProvider.getId();
                 }
             }
-
-            if(!flag){
-                throw new Exception("Unable to connect");
-            }
-            //here we have service provider present with given countryname so make a connection
-            Connection connection=new Connection();
-            connection.setUser(user);
-            connection.setServiceProvider(serviceProvider);
-
-            //set the maskedIp as "updatedCountryCode.serviceProviderId.userId"
-            String countryCode=country.getCode();
-            String mask=countryCode+"."+serviceProvider.getId()+"."+userId;
-
-            user.setMaskedIp(mask);
-            user.setConnected(true);
-
-            user.getConnectionList().add(connection);
-
-            serviceProvider.getConnectionList().add(connection);
-
-            userRepository2.save(user);
-            serviceProviderRepository2.save(serviceProvider);
         }
-        return user;
+        if(!anyOneOfTheServiceProviderHasThisCountry){
+            throw new Exception("Unable to connect");
+        }
+        user.setOriginalCountry(countryProviderServes);
 
+//        if(!caseIgnoreCheckAndEnumCheck(countryName.substring(0,3))){
+//            throw new Exception("Unable to connect");
+//        }
+
+        user.setMaskedIp(CountryName.valueOf(countryName.substring(0,3).toUpperCase()).toCode()+"."+nameOfServiceProviderServingThisCountry+"."+userId);
+        return userRepository2.save(user);
     }
     @Override
     public User disconnect(int userId) throws Exception {
-        //If the given user was not connected to a vpn, throw "Already disconnected" exception.
-        //Else, disconnect from vpn, make masked Ip as null, update relevant attributes and return updated user.
-        User user=userRepository2.findById(userId).get();
+
+        User user = userRepository2.findById(userId).get();
         if(!user.getConnected()){
             throw new Exception("Already disconnected");
         }
-        user.setMaskedIp(null);
-        user.setConnected(false);
-        userRepository2.save(user);
 
-        return user;
+        user.setConnected(false);
+        user.setMaskedIp(null);
+
+        List<ServiceProvider> serviceProviderListToWhomUserIsConnectedTo = user.getServiceProviderList();
+        for(ServiceProvider serviceProvider : serviceProviderListToWhomUserIsConnectedTo){
+            List<User> userList = serviceProvider.getUsers();
+            userList.removeIf(user1 -> user1.getId() == userId);
+//            Iterator<User> iterator = userList.iterator();
+//            while(iterator.hasNext()){
+//                if(iterator.next().getId() == userId){
+//                    iterator.remove();
+//                }
+//            }
+        }
+
+
+        List<Connection> connectionListOfThisUser = user.getConnectionList();
+        connectionListOfThisUser.clear();
+
+        return userRepository2.save(user);
     }
     @Override
     public User communicate(int senderId, int receiverId) throws Exception {
-        //Establish a connection between sender and receiver users
-        //To communicate to the receiver, sender should be in the current country of the receiver.
-        //If the receiver is connected to a vpn, his current country is the one he is connected to.
-        //If the receiver is not connected to vpn, his current country is his original country.
-        //The sender is initially not connected to any vpn. If the sender's original country does not match receiver's current country,
-        // we need to connect the sender to a suitable vpn. If there are multiple options, connect using the service provider having smallest id
-        //If the sender's original country matches receiver's current country, we do not need to do anything as they can communicate.
-        // Return the sender as it is.
-        //If communication can not be established due to any reason, throw "Cannot establish communication" exception
 
-        User sender=userRepository2.findById(senderId).get();
-        User receiver=userRepository2.findById(receiverId).get();
+        User sender = userRepository2.findById(senderId).get();
+        User receiver = userRepository2.findById(receiverId).get();
+        String currCountryOfReceiver;
 
-        if(receiver.getMaskedIp()!=null){
-            //receiver is connected to vpn , so its current country is the one he is connected to
-            String mask=receiver.getMaskedIp();//maskedIp=(updatedCountryCode.serviceProviderId.userId)
-            String cc=mask.substring(0,3);//to get the current country code
-
-            if(cc.equals(sender.getOriginalCountry().getCode())){
-                //both are in same country return sender as it is
-                return sender;
-            }
-            else{
-                //Senders original country doesnt match receivers currentCountry so connect sender with suiteble VPN
-                String countryName="";
-
-                if(cc.equalsIgnoreCase(CountryName.IND.toCode())){
-                    countryName=CountryName.IND.toString();
-                }
-                if(cc.equalsIgnoreCase(CountryName.USA.toCode())){
-                    countryName=CountryName.USA.toString();
-                }
-                if(cc.equalsIgnoreCase(CountryName.AUS.toCode())){
-                    countryName=CountryName.AUS.toString();
-                }
-                if(cc.equalsIgnoreCase(CountryName.JPN.toCode())){
-                    countryName=CountryName.JPN.toString();
-                }
-                if(cc.equalsIgnoreCase(CountryName.CHI.toCode())){
-                    countryName=CountryName.CHI.toString();
-                }
-
-                //using DRY principle//calling existing function i.e connect
-
-                User user2=connect(senderId,countryName);
-
-
-                if(!user2.getConnected()){
-                    throw new Exception("Cannot establish communication");
-//                    throw new Exception("Unable to connect");
-                }
-                else return user2;
-            }
+        if(receiver.getMaskedIp()==null){
+            currCountryOfReceiver = receiver.getOriginalIp().substring(0,3);
         }
-        else{
-            //receiver is not connected to vpn so original country is current country
-            if(receiver.getOriginalCountry().equals(sender.getOriginalCountry())){
-                return sender;
+        else {
+            currCountryOfReceiver = receiver.getMaskedIp().substring(0,3);
+        }
+        //getOriginalCountry().getCountryName().toString().substring(0,3).toUpperCase()
+        String countryOfSender = sender.getOriginalCountry().getCountryName().toString().substring(0,3).toUpperCase();
+
+        if(!currCountryOfReceiver.equals(countryOfSender)){
+            //Sender is not connected this time to any vpn
+            List<ServiceProvider> listOfServiceProviderReceiverIsConnectedTo = receiver.getServiceProviderList();
+//            if(listOfServiceProviderReceiverIsConnectedTo.size()==0){
+//                throw new Exception("Cannot establish communication");
+//            }
+            int minServiceProviderId = Integer.MAX_VALUE;
+            Country countrySenderIsToBeConnected = null;
+            ServiceProvider serviceProviderForSender = null;
+            for(ServiceProvider serviceProvider : listOfServiceProviderReceiverIsConnectedTo){
+                if(serviceProvider.getId()<minServiceProviderId){
+                    countrySenderIsToBeConnected = serviceProvider.getCountryList().get(0);
+                    serviceProviderForSender = serviceProvider;
+                }
             }
-            String countryName=receiver.getOriginalCountry().getCountryName().toString();
-
-            User user2=connect(senderId,countryName);
-
-            if(!user2.getConnected()){
+            if(serviceProviderForSender == null || countrySenderIsToBeConnected == null){
                 throw new Exception("Cannot establish communication");
-//                throw new Exception("Unable to connect");
             }
-            else return user2;
+            sender.setConnected(true);
+            sender.setOriginalCountry(countrySenderIsToBeConnected);
+            sender.getServiceProviderList().add(serviceProviderForSender);
+            return userRepository2.save(sender);
+        }
+        else {
+            return sender;
         }
 
+    }
+
+    public boolean caseIgnoreCheckAndEnumCheck(String countryName){
+        for (CountryName countryName1 : CountryName.values()) {
+            if (countryName1.name().equals(countryName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
