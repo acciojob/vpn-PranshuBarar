@@ -58,9 +58,9 @@ public class ConnectionServiceImpl implements ConnectionService {
         }
         user.setOriginalCountry(countryProviderServes);
 
-        if(!caseIgnoreCheckAndEnumCheck(countryName.substring(0,3))){
-            throw new Exception("Unable to connect");
-        }
+//        if(!caseIgnoreCheckAndEnumCheck(countryName.substring(0,3))){
+//            throw new Exception("Unable to connect");
+//        }
 
         user.setMaskedIp(CountryName.valueOf(countryName.substring(0,3)).toCode()+"."+nameOfServiceProviderServingThisCountry+"."+userId);
         return userRepository2.save(user);
