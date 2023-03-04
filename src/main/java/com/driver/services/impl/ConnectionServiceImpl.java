@@ -71,7 +71,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         List<ServiceProvider> serviceProviderListToWhomUserIsConnectedTo = user.getServiceProviderList();
         for(ServiceProvider serviceProvider : serviceProviderListToWhomUserIsConnectedTo){
-            List<User> userList = serviceProvider.getUsersList();
+            List<User> userList = serviceProvider.getUsers();
             userList.removeIf(user1 -> user1.getId() == userId);
 //            Iterator<User> iterator = userList.iterator();
 //            while(iterator.hasNext()){
