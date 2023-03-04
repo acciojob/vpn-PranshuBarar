@@ -101,7 +101,15 @@ public class ConnectionServiceImpl implements ConnectionService {
         User receiver = userRepository2.findById(receiverId).get();
 
         String currCountryOfReceiver = receiver.getMaskedIp().substring(0,3);
-        String countryOfSender  = sender.getMaskedIp().substring(0,3);
+        String countryOfSender;
+        if(sender.getMaskedIp() == null){
+            countryOfSender = sender.getOriginalIp().substring(0,3);
+        }
+        else {
+            countryOfSender  = sender.getMaskedIp().substring(0,3);
+        }
+
+
 
         if(!currCountryOfReceiver.equals(countryOfSender)){
             //Sender is not connected this time to any vpn
