@@ -37,17 +37,18 @@ public class UserServiceImpl implements UserService {
 
 
         User user = new User();
-        user.setPassword(password);
-        user.setUsername(username);
-        user.setOriginalCountry(country);
-        user.setConnected(false);
-        user.setMaskedIp(null);
+        user.setPassword(password);//
+        user.setUsername(username);//
+        user.setOriginalCountry(country);//
+        user.setConnected(false);//
+        user.setMaskedIp(null);//
 
-//        countryRepository3.save(country);
+        Country country1 = countryRepository3.save(country);
+        int id = country1.getUser().getId();
 
-        User userFromRepo = userRepository3.save(user);
-        userFromRepo.setOriginalIp(country.getCode()+"."+userFromRepo.getId());
-        return userRepository3.save(userFromRepo);
+//        User userFromRepo = userRepository3.save(user);
+        user.setOriginalIp(country.getCode()+"."+id);
+        return user;
 
     }
 
