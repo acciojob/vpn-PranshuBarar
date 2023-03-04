@@ -29,9 +29,9 @@ public class ConnectionServiceImpl implements ConnectionService {
         if(countryOfUser.equalsIgnoreCase(countryName)){
             return user;
         }
-        if(!caseIgnoreCheckAndEnumCheck(countryName)){
-            throw new Exception("Unable to connect");
-        }
+//        if(!caseIgnoreCheckAndEnumCheck(countryName)){
+//            throw new Exception("Unable to connect");
+//        }
 
         if(user.getServiceProviderList().isEmpty()){
             throw new Exception("Unable to connect");
