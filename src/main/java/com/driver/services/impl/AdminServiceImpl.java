@@ -42,7 +42,7 @@ public class AdminServiceImpl implements AdminService {
         serviceProvider.setAdmin(admin);
         admin.getServiceProviders().add(serviceProvider);
         serviceProviderRepository1.save(serviceProvider);
-        return adminRepository1.save(admin);
+        return admin;
     }
 
     @Override
