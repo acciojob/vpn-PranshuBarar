@@ -125,7 +125,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 
     public boolean caseIgnoreCheckAndEnumCheck(String countryName){
         for (CountryName countryName1 : CountryName.values()) {
-            if (countryName1.name().equalsIgnoreCase(countryName)) {
+            if (countryName1.name().equals(countryName)) {
                 return true;
             }
         }
