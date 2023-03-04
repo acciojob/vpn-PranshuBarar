@@ -96,7 +96,8 @@ public class ConnectionServiceImpl implements ConnectionService {
         List<Connection> connectionListOfThisUser = user.getConnectionList();
         connectionListOfThisUser.clear();
 
-        return userRepository2.save(user);
+        userRepository2.save(user);
+        return user;
     }
     @Override
     public User communicate(int senderId, int receiverId) throws Exception {
