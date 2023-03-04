@@ -25,14 +25,16 @@ public class ConnectionServiceImpl implements ConnectionService {
         if(user.getConnected()){
             throw new Exception("Already connected");
         }
+
         String countryOfUser = user.getOriginalCountry().getCountryName().toString();
-        if(countryOfUser.equalsIgnoreCase(countryName)){
+        if(countryOfUser.equalsIgnoreCase(countryName.toUpperCase().substring(0,3))){
             return user;
         }
+
 //        if(!caseIgnoreCheckAndEnumCheck(countryName)){
 //            throw new Exception("Unable to connect");
 //        }
-
+        //--------------------------------------------=======================================
         if(user.getServiceProviderList().isEmpty()){
             throw new Exception("Unable to connect");
         }
@@ -43,7 +45,8 @@ public class ConnectionServiceImpl implements ConnectionService {
         int idOfThisServiceProvider = Integer.MAX_VALUE;
         for(ServiceProvider serviceProvider : serviceProviderListOfUser){
             for(Country countryThisProviderServes : serviceProvider.getCountryList()){
-                if(countryThisProviderServes.getCountryName().toString().equalsIgnoreCase(countryName) && serviceProvider.getId()<idOfThisServiceProvider){
+                if(countryThisProviderServes.getCountryName().toString().equalsIgnoreCase(countryName.substring(0,3).toUpperCase())
+                        && serviceProvider.getId()<idOfThisServiceProvider){
                     if(!anyOneOfTheServiceProviderHasThisCountry){
                         anyOneOfTheServiceProviderHasThisCountry = true;
                     }
@@ -63,7 +66,8 @@ public class ConnectionServiceImpl implements ConnectionService {
 //        }
 
         user.setMaskedIp(CountryName.valueOf(countryName.substring(0,3).toUpperCase()).toCode()+"."+nameOfServiceProviderServingThisCountry+"."+userId);
-        return userRepository2.save(user);
+        userRepository2.save(user);
+        return user;
     }
     @Override
     public User disconnect(int userId) throws Exception {

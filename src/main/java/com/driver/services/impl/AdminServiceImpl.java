@@ -60,7 +60,7 @@ public class AdminServiceImpl implements AdminService {
             flag = true;
         }
         if(!flag){
-            throw new Exception("Country not founddd");
+            throw new Exception("Country not found");
         }
         ServiceProvider serviceProvider = serviceProviderRepository1.findById(serviceProviderId).get();
         List<Country> countryList = serviceProvider.getCountryList();
