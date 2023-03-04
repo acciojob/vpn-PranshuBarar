@@ -100,14 +100,10 @@ public class ConnectionServiceImpl implements ConnectionService {
         User sender = userRepository2.findById(senderId).get();
         User receiver = userRepository2.findById(receiverId).get();
 
-        String currCountryOfReceiver = receiver.getMaskedIp().substring(0,3);
+        String currCountryOfReceiver = receiver.getOriginalCountry().getCountryName().toString().substring(0,3).toUpperCase();
         String countryOfSender;
-        if(sender.getMaskedIp() == null){
-            countryOfSender = sender.getOriginalIp().substring(0,3);
-        }
-        else {
-            countryOfSender  = sender.getMaskedIp().substring(0,3);
-        }
+        countryOfSender = sender.getOriginalCountry().getCountryName().toString().substring(0,3).toUpperCase();
+
 
 
 
