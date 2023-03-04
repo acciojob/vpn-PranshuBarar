@@ -47,7 +47,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public ServiceProvider addCountry(int serviceProviderId, String countryName) throws Exception{
-        if(!caseIgnoreCheckAndEnumCheck(countryName.toUpperCase())){
+        if(!caseIgnoreCheckAndEnumCheck(countryName.toUpperCase().substring(0,3))){
             throw new Exception("Country not found");
         }
         ServiceProvider serviceProvider = serviceProviderRepository1.findById(serviceProviderId).get();
@@ -56,14 +56,14 @@ public class AdminServiceImpl implements AdminService {
         Country country = new Country();
 
 
-        country.setCountryName(CountryName.valueOf(countryName.toUpperCase()));
+        country.setCountryName(CountryName.valueOf(countryName.toUpperCase().substring(0,3)));
 //        try {
 //            country.setCountryName(CountryName.caseIgnoreCheck(countryName));
 //        } catch (Exception e){
 //            throw new Exception("Country not found");
 //        }
 
-        country.setCode(CountryName.valueOf(countryName.toUpperCase()).toCode());
+        country.setCode(CountryName.valueOf(countryName.toUpperCase().substring(0,3)).toCode());
         countryList.add(country);
 
         return serviceProviderRepository1.save(serviceProvider);

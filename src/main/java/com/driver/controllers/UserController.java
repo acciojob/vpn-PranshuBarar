@@ -21,9 +21,8 @@ public class UserController {
     }
 
     @PutMapping("/subscribe")
-    public ResponseEntity<Void> subscribe(@RequestParam Integer userId, @RequestParam Integer serviceProviderId){
+    public void subscribe(@RequestParam Integer userId, @RequestParam Integer serviceProviderId){
         //subscribe to the serviceProvider by adding it to the list of providers and return updated User
         User user = userService.subscribe(userId, serviceProviderId);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
