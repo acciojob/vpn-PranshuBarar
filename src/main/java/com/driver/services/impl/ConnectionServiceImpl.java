@@ -60,6 +60,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             throw new Exception("Unable to connect");
         }
         user.setOriginalCountry(countryProviderServes);
+        user.setConnected(true);
 
 //        if(!caseIgnoreCheckAndEnumCheck(countryName.substring(0,3))){
 //            throw new Exception("Unable to connect");
