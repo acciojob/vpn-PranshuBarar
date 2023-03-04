@@ -25,6 +25,9 @@ public class ConnectionServiceImpl implements ConnectionService {
         if(user.getConnected()){
             throw new Exception("Already connected");
         }
+        if(!caseIgnoreCheckAndEnumCheck(countryName)){
+            throw new Exception("Unable to connect");
+        }
         String countryOfUser = user.getOriginalCountry().getCountryName().toString();
         if(countryOfUser.equalsIgnoreCase(countryName)){
             return user;
@@ -54,6 +57,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             throw new Exception("Unable to connect");
         }
         user.setOriginalCountry(countryProviderServes);
+
 
         user.setMaskedIp(CountryName.valueOf(countryName).toCode()+"."+nameOfServiceProviderServingThisCountry+"."+userId);
         return userRepository2.save(user);
@@ -119,5 +123,14 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         throw new Exception("Cannot establish communication");
 
+    }
+
+    public boolean caseIgnoreCheckAndEnumCheck(String countryName){
+        for (CountryName countryName1 : CountryName.values()) {
+            if (countryName1.name().equalsIgnoreCase(countryName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
