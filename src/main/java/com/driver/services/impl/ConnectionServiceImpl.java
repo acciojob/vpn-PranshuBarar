@@ -68,6 +68,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         connection.setUser(user);
         connection.setServiceProvider(serviceProviderUserIsGettingConnectedToKnow);
         user.getConnectionList().add(connection);
+        connectionRepository2.save(connection);
 
 //        if(!caseIgnoreCheckAndEnumCheck(countryName.substring(0,3))){
 //            throw new Exception("Unable to connect");
@@ -87,18 +88,23 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         user.setConnected(false);
         user.setMaskedIp(null);
+        user.getConnectionList().clear();
+        user.getServiceProviderList().clear();
+        user.setOriginalCountry(returnCountry(user.getOriginalIp().substring(0,3)));
+        List<ServiceProvider> serviceProviderListOfThisUser = user.getServiceProviderList();
+        serviceProviderListOfThisUser.clear();
 
-        List<ServiceProvider> serviceProviderListToWhomUserIsConnectedTo = user.getServiceProviderList();
-        for(ServiceProvider serviceProvider : serviceProviderListToWhomUserIsConnectedTo){
-            List<User> userList = serviceProvider.getUsers();
-            userList.removeIf(user1 -> user1.getId() == userId);
-//            Iterator<User> iterator = userList.iterator();
-//            while(iterator.hasNext()){
-//                if(iterator.next().getId() == userId){
-//                    iterator.remove();
-//                }
-//            }
-        }
+//        List<ServiceProvider> serviceProviderListToWhomUserIsConnectedTo = user.getServiceProviderList();
+//        for(ServiceProvider serviceProvider : serviceProviderListToWhomUserIsConnectedTo){
+//            List<User> userList = serviceProvider.getUsers();
+//            userList.removeIf(user1 -> user1.getId() == userId);
+////            Iterator<User> iterator = userList.iterator();
+////            while(iterator.hasNext()){
+////                if(iterator.next().getId() == userId){
+////                    iterator.remove();
+////                }
+////            }
+//        }
 
 
         List<Connection> connectionListOfThisUser = user.getConnectionList();
@@ -160,5 +166,31 @@ public class ConnectionServiceImpl implements ConnectionService {
             }
         }
         return false;
+    }
+
+    public Country returnCountry(String code){
+        CountryName countryName = null;
+        switch(code){
+            case("001"):{
+                countryName = CountryName.IND;
+                break;
+            }
+            case("002"):{
+                countryName = CountryName.USA;
+                break;
+            }case("003"):{
+                countryName = CountryName.AUS;
+                break;
+            }case("004"):{
+                countryName = CountryName.CHI;
+                break;
+            }case("005"):{
+                countryName = CountryName.JPN;
+            }
+        }
+        Country country = new Country();
+        country.setCountryName(countryName);
+        country.setCode(code);
+        return country;
     }
 }
