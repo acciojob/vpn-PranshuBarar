@@ -62,7 +62,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 //            throw new Exception("Unable to connect");
 //        }
 
-        user.setMaskedIp(CountryName.valueOf(countryName.substring(0,3)).toCode()+"."+nameOfServiceProviderServingThisCountry+"."+userId);
+        user.setMaskedIp(CountryName.valueOf(countryName.substring(0,3).toUpperCase()).toCode()+"."+nameOfServiceProviderServingThisCountry+"."+userId);
         return userRepository2.save(user);
     }
     @Override
