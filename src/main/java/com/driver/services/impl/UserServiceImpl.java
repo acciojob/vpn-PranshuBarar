@@ -28,8 +28,11 @@ public class UserServiceImpl implements UserService {
 //        }
 
         Country country = new Country();
-        country.setCountryName(CountryName.valueOf(countryName.toUpperCase()));
-        country.setCode(CountryName.valueOf(countryName.toUpperCase()).toCode());
+        if(!caseIgnoreCheckAndEnumCheck(countryName.toUpperCase().substring(0,3))){
+            throw new Exception();
+        }
+        country.setCountryName(CountryName.valueOf(countryName.toUpperCase().substring(0,3)));
+        country.setCode(CountryName.valueOf(countryName.toUpperCase().substring(0,3)).toCode());
 
         User user = new User();
         user.setPassword(password);
