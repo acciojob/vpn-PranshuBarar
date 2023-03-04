@@ -47,7 +47,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public ServiceProvider addCountry(int serviceProviderId, String countryName) throws Exception{
         if(!caseIgnoreCheckAndEnumCheck(countryName)){
-            throw new Exception("Country not found");
+            throw new Exception("No enum constant com.driver.model.CountryName."+countryName);
         }
         ServiceProvider serviceProvider = serviceProviderRepository1.findById(serviceProviderId).get();
         List<Country> countryList = serviceProvider.getCountryList();
