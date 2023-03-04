@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService {
         user.setUsername(username);
         user.setOriginalCountry(country);
         user.setConnected(false);
+        user.setMaskedIp(null);
 
         User userFromRepo = userRepository3.save(user);
         user.setOriginalIp(country.getCode()+"."+userFromRepo.getId());

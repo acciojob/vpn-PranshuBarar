@@ -1,6 +1,7 @@
 package com.driver.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,10 +22,10 @@ public class User {
     private Boolean connected;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    List<Connection> connectionList;
+    List<Connection> connectionList = new ArrayList<>();
 
     @ManyToMany
-    List<ServiceProvider> serviceProviderList;
+    List<ServiceProvider> serviceProviderList = new ArrayList<>();
 
     @OneToOne
     @JoinColumn
