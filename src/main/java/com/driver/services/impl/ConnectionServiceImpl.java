@@ -113,18 +113,24 @@ public class ConnectionServiceImpl implements ConnectionService {
         if(!currCountryOfReceiver.equals(countryOfSender)){
             //Sender is not connected this time to any vpn
             List<ServiceProvider> listOfServiceProviderReceiverIsConnectedTo = receiver.getServiceProviderList();
-            if(listOfServiceProviderReceiverIsConnectedTo.isEmpty()){
-                throw new Exception("Cannot establish communication");
-            }
+//            if(listOfServiceProviderReceiverIsConnectedTo.size()==0){
+//                throw new Exception("Cannot establish communication");
+//            }
             int minServiceProviderId = Integer.MAX_VALUE;
             Country countrySenderIsToBeConnected = null;
+            ServiceProvider serviceProviderForSender = null;
             for(ServiceProvider serviceProvider : listOfServiceProviderReceiverIsConnectedTo){
                 if(serviceProvider.getId()<minServiceProviderId){
                     countrySenderIsToBeConnected = serviceProvider.getCountryList().get(0);
+                    serviceProviderForSender = serviceProvider;
                 }
+            }
+            if(serviceProviderForSender == null || countrySenderIsToBeConnected == null){
+                throw new Exception("Country not found");
             }
             sender.setConnected(true);
             sender.setOriginalCountry(countrySenderIsToBeConnected);
+            sender.getServiceProviderList().add(serviceProviderForSender);
             return userRepository2.save(sender);
         }
         else {
