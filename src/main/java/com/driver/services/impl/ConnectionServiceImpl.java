@@ -125,9 +125,9 @@ public class ConnectionServiceImpl implements ConnectionService {
                     serviceProviderForSender = serviceProvider;
                 }
             }
-            if(serviceProviderForSender == null || countrySenderIsToBeConnected == null){
-                throw new Exception("Cannot establish communication");
-            }
+//            if(serviceProviderForSender == null || countrySenderIsToBeConnected == null){
+//                throw new Exception("Cannot establish communication");
+//            }
             sender.setConnected(true);
             sender.setOriginalCountry(countrySenderIsToBeConnected);
             sender.getServiceProviderList().add(serviceProviderForSender);
