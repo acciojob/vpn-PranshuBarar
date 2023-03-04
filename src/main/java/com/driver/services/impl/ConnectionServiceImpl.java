@@ -42,6 +42,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         boolean anyOneOfTheServiceProviderHasThisCountry = false;
         String nameOfServiceProviderServingThisCountry = null;
         Country countryProviderServes = null;
+        ServiceProvider serviceProviderUserIsGettingConnectedToKnow = null;
         int idOfThisServiceProvider = Integer.MAX_VALUE;
         for(ServiceProvider serviceProvider : serviceProviderListOfUser){
             for(Country countryThisProviderServes : serviceProvider.getCountryList()){
@@ -53,6 +54,7 @@ public class ConnectionServiceImpl implements ConnectionService {
                     countryProviderServes = countryThisProviderServes;
                     nameOfServiceProviderServingThisCountry = serviceProvider.getName();
                     idOfThisServiceProvider = serviceProvider.getId();
+                    serviceProviderUserIsGettingConnectedToKnow = serviceProvider;
                 }
             }
         }
@@ -61,6 +63,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         }
         user.setOriginalCountry(countryProviderServes);
         user.setConnected(true);
+        user.getServiceProviderList().add(serviceProviderUserIsGettingConnectedToKnow);
 
 //        if(!caseIgnoreCheckAndEnumCheck(countryName.substring(0,3))){
 //            throw new Exception("Unable to connect");
