@@ -93,7 +93,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         User receiver = userRepository2.findById(receiverId).get();
 
         if(!receiver.getConnected()){
-            if(sender.getOriginalCountry().getCode().equals(receiver.getOriginalCountry().getCode())){
+            if(sender.getOriginalCountry().getCountryName().toCode().equals(receiver.getOriginalCountry().getCountryName().toCode())){
                 return sender;
             }
             User connectedSender;
@@ -110,7 +110,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         }
         else {
-            if(sender.getOriginalCountry().getCode().equals(receiver.getMaskedIp().substring(0,3))){
+            if(sender.getOriginalCountry().getCountryName().toCode().equals(receiver.getMaskedIp().substring(0,3))){
                 return sender;
             }
             List<ServiceProvider> serviceProviderList = receiver.getServiceProviderList();
