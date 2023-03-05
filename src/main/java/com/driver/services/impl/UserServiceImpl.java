@@ -21,16 +21,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     CountryRepository countryRepository3;
 
-    @Autowired
-    ConnectionRepository connectionRepository;
 
     @Override
     public User register(String username, String password, String countryName) throws Exception{
 
         Country country = new Country();
-        if(!caseIgnoreCheckAndEnumCheck(countryName.toUpperCase().substring(0,3))){
-            throw new Exception();
-        }
+//        if(!caseIgnoreCheckAndEnumCheck(countryName.toUpperCase().substring(0,3))){
+//            throw new Exception();
+//        }
         country.setCountryName(CountryName.valueOf(countryName.toUpperCase().substring(0,3)));
         country.setCode(CountryName.valueOf(countryName.toUpperCase().substring(0,3)).toCode());
 
@@ -39,23 +37,22 @@ public class UserServiceImpl implements UserService {
         user.setUsername(username);//
         user.setOriginalCountry(country);//
         user.setConnected(false);//
-        user.setMaskedIp(null);//
-        country.setUser(user);
+        country.setUser(user);//
 
-        List<ServiceProvider> serviceProviderList = serviceProviderRepository3.findAll();
-        for(ServiceProvider serviceProvider : serviceProviderList){
-            List<Country> countryList = serviceProvider.getCountryList();
-            for(Country country1 : countryList){
-                if(country1.getCountryName().toCode().equals(country.getCode())){
-                    user.getServiceProviderList().add(serviceProvider);
-                    break;
-                }
-            }
-        }
+//        List<ServiceProvider> serviceProviderList = serviceProviderRepository3.findAll();
+//        for(ServiceProvider serviceProvider : serviceProviderList){
+//            List<Country> countryList = serviceProvider.getCountryList();
+//            for(Country country1 : countryList){
+//                if(country1.getCountryName().toCode().equals(country.getCode())){
+//                    user.getServiceProviderList().add(serviceProvider);
+//                    break;
+//                }
+//            }
+//        }
         User userFromRepo = userRepository3.save(user);
-        userFromRepo.setOriginalIp(country.getCode()+"."+userFromRepo.getId());
-        User userFromRepoUpdated = userRepository3.save(userFromRepo);
-        return userFromRepoUpdated;
+        user.setOriginalIp(country.getCode()+"."+userFromRepo.getId());
+        userRepository3.save(user);
+        return user;
 
     }
 
