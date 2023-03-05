@@ -51,11 +51,11 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public ServiceProvider addCountry(int serviceProviderId, String countryName) throws Exception{
 //        !caseIgnoreCheckAndEnumCheck(countryName.toUpperCase().substring(0,3))
-        boolean flag = CountryName.AUS.toString().equalsIgnoreCase(countryName) ||
-                CountryName.USA.toString().equalsIgnoreCase(countryName) ||
-                CountryName.IND.toString().equalsIgnoreCase(countryName) ||
-                CountryName.CHI.toString().equalsIgnoreCase(countryName) ||
-                CountryName.JPN.toString().equalsIgnoreCase(countryName);
+        boolean flag = countryName.equalsIgnoreCase("ind") ||
+                countryName.equalsIgnoreCase("aus") ||
+                countryName.equalsIgnoreCase("chi") ||
+                countryName.equalsIgnoreCase("jpn") ||
+                countryName.equalsIgnoreCase("usa");
         if(!flag){
             throw new Exception("Country not found");
         }
