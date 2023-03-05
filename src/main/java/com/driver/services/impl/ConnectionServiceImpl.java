@@ -85,7 +85,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         user.getConnectionList().clear();
         user.getServiceProviderList().clear();
 //        user.setOriginalCountry(returnCountry(user.getOriginalIp().substring(0,3)));
-        user.setOriginalCountry(returnCountry(user.getOriginalIp().substring(0,3)));
+//        user.setOriginalCountry(returnCountry(user.getOriginalIp().substring(0,3)));
         user.getServiceProviderList().clear();
         user.getConnectionList().clear();
 
