@@ -26,16 +26,21 @@ public class ConnectionServiceImpl implements ConnectionService {
             throw new Exception("Already connected");
         }
 
-        String countryOfUser = user.getOriginalIp().substring(0,3).toUpperCase();
+        String countryOfUser = user.getOriginalCountry().getCountryName().toString();
         if(countryOfUser.equalsIgnoreCase(countryName.toUpperCase().substring(0,3))){
             return user;
         }
+
+//        if(!caseIgnoreCheckAndEnumCheck(countryName)){
+//            throw new Exception("Unable to connect");
+//        }
         //--------------------------------------------=======================================
         if(user.getServiceProviderList().isEmpty()){
             throw new Exception("Unable to connect");
         }
         List<ServiceProvider> serviceProviderListOfUser = user.getServiceProviderList();
         boolean anyOneOfTheServiceProviderHasThisCountry = false;
+//        String nameOfServiceProviderServingThisCountry = null;
         Country countryProviderServes = null;
         ServiceProvider serviceProviderUserIsGettingConnectedToKnow = null;
         int idOfThisServiceProvider = Integer.MAX_VALUE;
@@ -47,6 +52,7 @@ public class ConnectionServiceImpl implements ConnectionService {
                         anyOneOfTheServiceProviderHasThisCountry = true;
                     }
                     countryProviderServes = countryThisProviderServes;
+//                    nameOfServiceProviderServingThisCountry = serviceProvider.getName();
                     idOfThisServiceProvider = serviceProvider.getId();
                     serviceProviderUserIsGettingConnectedToKnow = serviceProvider;
                 }
@@ -63,6 +69,10 @@ public class ConnectionServiceImpl implements ConnectionService {
         connection.setServiceProvider(serviceProviderUserIsGettingConnectedToKnow);
         user.getConnectionList().add(connection);
         connectionRepository2.save(connection);
+
+//        if(!caseIgnoreCheckAndEnumCheck(countryName.substring(0,3))){
+//            throw new Exception("Unable to connect");
+//        }
 
         user.setMaskedIp(CountryName.valueOf(countryName.substring(0,3).toUpperCase()).toCode()+"."+idOfThisServiceProvider+"."+userId);
         userRepository2.save(user);
@@ -135,6 +145,15 @@ public class ConnectionServiceImpl implements ConnectionService {
             userRepository2.save(sender);
         }
         return sender;
+    }
+
+    public boolean caseIgnoreCheckAndEnumCheck(String countryName){
+        for (CountryName countryName1 : CountryName.values()) {
+            if (countryName1.name().equals(countryName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Country returnCountry(String code){
