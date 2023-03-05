@@ -43,9 +43,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             for(Country countryThisProviderServes : serviceProvider.getCountryList()){
                 if(countryThisProviderServes.getCountryName().toString().equalsIgnoreCase(countryName)
                         && serviceProvider.getId()<idOfThisServiceProvider){
-                    if(!anyOneOfTheServiceProviderHasThisCountry){
-                        anyOneOfTheServiceProviderHasThisCountry = true;
-                    }
+                    anyOneOfTheServiceProviderHasThisCountry = true;
                     countryProviderServes = countryThisProviderServes;
                     idOfThisServiceProvider = serviceProvider.getId();
                     serviceProviderUserIsGettingConnectedToKnow = serviceProvider;
