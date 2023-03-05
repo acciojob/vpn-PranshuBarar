@@ -26,8 +26,8 @@ public class ConnectionServiceImpl implements ConnectionService {
             throw new Exception("Already connected");
         }
 
-        String countryOfUser = user.getOriginalCountry().getCountryName().toString().substring(0,3);
-        if(countryOfUser.equalsIgnoreCase(countryName.toUpperCase().substring(0,3))){
+        String countryOfUser = user.getOriginalCountry().getCountryName().toString();
+        if(countryOfUser.equalsIgnoreCase(countryName)){
             return user;
         }
         //--------------------------------------------=======================================
@@ -41,8 +41,8 @@ public class ConnectionServiceImpl implements ConnectionService {
         int idOfThisServiceProvider = Integer.MAX_VALUE;
         for(ServiceProvider serviceProvider : serviceProviderListOfUser){
             for(Country countryThisProviderServes : serviceProvider.getCountryList()){
-                if(countryThisProviderServes.getCountryName().toString().equalsIgnoreCase(countryName.substring(0,3).toUpperCase())
-                        && serviceProvider.getId()<=idOfThisServiceProvider){
+                if(countryThisProviderServes.getCountryName().toString().equalsIgnoreCase(countryName.substring(0,3))
+                        && serviceProvider.getId()<idOfThisServiceProvider){
                     if(!anyOneOfTheServiceProviderHasThisCountry){
                         anyOneOfTheServiceProviderHasThisCountry = true;
                     }
@@ -55,17 +55,24 @@ public class ConnectionServiceImpl implements ConnectionService {
         if(!anyOneOfTheServiceProviderHasThisCountry){
             throw new Exception("Unable to connect");
         }
-        user.setOriginalIp(CountryName.valueOf(countryName.toUpperCase().substring(0,3)).toCode()+"."+userId);
-        user.setOriginalCountry(countryProviderServes);
-        user.setConnected(true);
-        user.getServiceProviderList().add(serviceProviderUserIsGettingConnectedToKnow);
         Connection connection = new Connection();
         connection.setUser(user);
         connection.setServiceProvider(serviceProviderUserIsGettingConnectedToKnow);
-        Connection connection1 = connectionRepository2.save(connection);
-        user.getConnectionList().add(connection1);
+        user.setConnected(true);
         user.setMaskedIp(CountryName.valueOf(countryName.substring(0,3).toUpperCase()).toCode()+"."+idOfThisServiceProvider+"."+userId);
+
+//        user.setOriginalIp(CountryName.valueOf(countryName.toUpperCase().substring(0,3)).toCode()+"."+userId);
+//        user.setOriginalCountry(countryProviderServes);
+
+        user.getServiceProviderList().add(serviceProviderUserIsGettingConnectedToKnow);
+        serviceProviderUserIsGettingConnectedToKnow.getConnectionList().add(connection);
+
+//        Connection connection1 = connectionRepository2.save(connection);
+        user.getConnectionList().add(connection);
+
+
         userRepository2.save(user);
+        serviceProviderRepository2.save(serviceProviderUserIsGettingConnectedToKnow);
 
         return user;
 
