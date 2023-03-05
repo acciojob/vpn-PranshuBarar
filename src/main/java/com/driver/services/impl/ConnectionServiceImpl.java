@@ -105,11 +105,16 @@ public class ConnectionServiceImpl implements ConnectionService {
                 return sender;
             }
             User connectedSender;
-            try {
-                connectedSender = connect(senderId,receiver.getOriginalCountry().getCountryName().toString());
-            } catch(Exception e) {
+//            try {
+            connectedSender = connect(senderId,receiver.getOriginalCountry().getCountryName().toString());
+//            }
+//           catch(Exception e) {
+            if(!connectedSender.getConnected()){
                 throw new Exception("Cannot establish communication");
             }
+
+//            }
+
             return connectedSender;
 
         }
@@ -127,15 +132,15 @@ public class ConnectionServiceImpl implements ConnectionService {
                 }
             }
             User connectSender;
-            try {
+//            try {
                 connectSender = connect(senderId, countryNameToGetConnected);
-            } catch (Exception e){
-                throw new Exception("Cannot establish communication");
-            }
-
-//            if(!connectSender.getConnected()){
+//            } catch (Exception e){
 //                throw new Exception("Cannot establish communication");
 //            }
+
+            if(!connectSender.getConnected()){
+                throw new Exception("Cannot establish communication");
+            }
             return connectSender;
         }
     }
