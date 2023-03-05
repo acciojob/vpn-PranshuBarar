@@ -59,17 +59,19 @@ public class UserServiceImpl implements UserService {
     public User subscribe(Integer userId, Integer serviceProviderId) {
         User user = userRepository3.findById(userId).get();
         ServiceProvider serviceProvider = serviceProviderRepository3.findById(serviceProviderId).get();
-        user.getServiceProviderList().add(serviceProvider);
+//        user.getServiceProviderList().add(serviceProvider);
+//        Connection connection = new Connection();
+//        connection.setUser(user);
+//        connection.setServiceProvider(serviceProvider);
+//        user.getConnectionList().add(connection);
+//        user.getServiceProviderList().add(serviceProvider);
+
+
         Connection connection = new Connection();
         connection.setUser(user);
         connection.setServiceProvider(serviceProvider);
-
-        serviceProvider.getConnectionList().add(connection);
-        serviceProviderRepository3.save(serviceProvider);
-        ServiceProvider serviceProviderUpdated = serviceProviderRepository3.findById(serviceProviderId).get();
-        Connection connectionFromRepo = serviceProviderUpdated.getConnectionList().get(serviceProviderUpdated.getConnectionList().size()-1);
-
-        user.getConnectionList().add(connectionFromRepo);
+        user.getConnectionList().add(connection);
+        user.getServiceProviderList().add(serviceProvider);
         userRepository3.save(user);
         return user;
     }
