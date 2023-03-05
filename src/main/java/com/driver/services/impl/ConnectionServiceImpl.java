@@ -28,6 +28,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         String countryOfUser = user.getOriginalCountry().getCountryName().toString();
         if(countryOfUser.equalsIgnoreCase(countryName)){
+            user.setConnected(true);
             return user;
         }
         //--------------------------------------------=======================================
@@ -82,17 +83,8 @@ public class ConnectionServiceImpl implements ConnectionService {
         if(!user.getConnected()){
             throw new Exception("Already disconnected");
         }
-
         user.setConnected(false);
         user.setMaskedIp(null);
-
-//        user.getConnectionList().clear();
-//        user.getServiceProviderList().clear();
-////        user.setOriginalCountry(returnCountry(user.getOriginalIp().substring(0,3)));
-////        user.setOriginalCountry(returnCountry(user.getOriginalIp().substring(0,3)));
-//        user.getServiceProviderList().clear();
-//        user.getConnectionList().clear();
-
         userRepository2.save(user);
         return user;
     }
@@ -106,16 +98,11 @@ public class ConnectionServiceImpl implements ConnectionService {
                 return sender;
             }
             User connectedSender;
-//            try {
+
             connectedSender = connect(senderId,receiver.getOriginalCountry().getCountryName().toString());
-//            }
-//           catch(Exception e) {
             if(!connectedSender.getConnected()){
                 throw new Exception("Cannot establish communication");
             }
-
-//            }
-
             return connectedSender;
 
         }
