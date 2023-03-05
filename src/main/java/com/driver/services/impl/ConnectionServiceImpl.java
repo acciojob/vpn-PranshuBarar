@@ -104,10 +104,16 @@ public class ConnectionServiceImpl implements ConnectionService {
             if(sender.getOriginalCountry().getCode().equals(receiver.getOriginalCountry().getCode())){
                 return sender;
             }
-            User connectedSender = connect(senderId,receiver.getOriginalCountry().getCountryName().toString());
-            if(!connectedSender.getConnected()){
+            User connectedSender;
+            try {
+                connectedSender = connect(senderId,receiver.getOriginalCountry().getCountryName().toString());
+            } catch(Exception e) {
                 throw new Exception("Cannot establish communication");
             }
+
+//            if(!connectedSender.getConnected()){
+//                throw new Exception("Cannot establish communication");
+//            }
 //            userRepository2.save(connectedSender);
             return connectedSender;
 
@@ -125,10 +131,16 @@ public class ConnectionServiceImpl implements ConnectionService {
                     id = serviceProvider.getId();
                 }
             }
-            User connectSender = connect(senderId, countryNameToGetConnected);
-            if(!connectSender.getConnected()){
+            User connectSender;
+            try {
+                connectSender = connect(senderId, countryNameToGetConnected);
+            } catch (Exception e){
                 throw new Exception("Cannot establish communication");
             }
+
+//            if(!connectSender.getConnected()){
+//                throw new Exception("Cannot establish communication");
+//            }
             return connectSender;
         }
     }
