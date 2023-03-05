@@ -69,8 +69,9 @@ public class ConnectionServiceImpl implements ConnectionService {
 //        }
 
         user.setMaskedIp(CountryName.valueOf(countryName.substring(0,3).toUpperCase()).toCode()+"."+idOfThisServiceProvider+"."+userId);
-        userRepository2.save(user);
-        return user;
+        User user1 = userRepository2.save(user);
+        return user1;
+
     }
     @Override
     public User disconnect(int userId) throws Exception {
