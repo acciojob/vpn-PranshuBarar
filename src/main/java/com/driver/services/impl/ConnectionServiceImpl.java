@@ -132,7 +132,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 //            }
             User connectSender;
             try {
-                connectSender = connect(senderId, receiver.getMaskedIp().substring(0,3));
+                connectSender = connect(senderId, returnCountry(receiver.getMaskedIp().substring(0,3)).getCountryName().toString());
             } catch (Exception e){
                 throw new Exception("Cannot establish communication");
             }
