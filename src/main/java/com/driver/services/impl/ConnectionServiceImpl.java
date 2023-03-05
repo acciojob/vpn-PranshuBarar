@@ -55,6 +55,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         if(!anyOneOfTheServiceProviderHasThisCountry){
             throw new Exception("Unable to connect");
         }
+        user.setOriginalIp(CountryName.valueOf(countryName.toUpperCase().substring(0,3)).toCode()+"."+userId);
         user.setOriginalCountry(countryProviderServes);
         user.setConnected(true);
         user.getServiceProviderList().add(serviceProviderUserIsGettingConnectedToKnow);
@@ -63,12 +64,6 @@ public class ConnectionServiceImpl implements ConnectionService {
         connection.setServiceProvider(serviceProviderUserIsGettingConnectedToKnow);
         Connection connection1 = connectionRepository2.save(connection);
         user.getConnectionList().add(connection1);
-
-
-//        if(!caseIgnoreCheckAndEnumCheck(countryName.substring(0,3))){
-//            throw new Exception("Unable to connect");
-//        }
-
         user.setMaskedIp(CountryName.valueOf(countryName.substring(0,3).toUpperCase()).toCode()+"."+idOfThisServiceProvider+"."+userId);
         userRepository2.save(user);
         return user;
