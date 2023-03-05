@@ -110,11 +110,6 @@ public class ConnectionServiceImpl implements ConnectionService {
             } catch(Exception e) {
                 throw new Exception("Cannot establish communication");
             }
-
-//            if(!connectedSender.getConnected()){
-//                throw new Exception("Cannot establish communication");
-//            }
-//            userRepository2.save(connectedSender);
             return connectedSender;
 
         }
