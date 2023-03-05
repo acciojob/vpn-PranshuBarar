@@ -132,8 +132,13 @@ public class ConnectionServiceImpl implements ConnectionService {
                 }
 
                 //using DRY principle//calling existing function i.e connect
+                User user2;
+                try {
+                    user2=connect(senderId,countryName);
+                } catch (Exception e){
+                    throw new Exception("Unable to connect");
+                }
 
-                User user2=connect(senderId,countryName);
 
 
                 if(!user2.getConnected()){
@@ -150,11 +155,11 @@ public class ConnectionServiceImpl implements ConnectionService {
             }
             String countryName=receiver.getOriginalCountry().getCountryName().toString();
             User user2;
-            try {
+//            try {
                 user2=connect(senderId,countryName);
-            } catch (Exception e){
-                throw new Exception("Unable to connect");
-            }
+//            } catch (Exception e){
+//                throw new Exception("Unable to connect");
+//            }
 
 
             if(!user2.getConnected()){
