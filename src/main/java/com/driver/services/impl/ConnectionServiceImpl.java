@@ -136,7 +136,7 @@ public class ConnectionServiceImpl implements ConnectionService {
                 try {
                     user2=connect(senderId,countryName);
                 } catch (Exception e){
-                    throw new Exception("Unable to connect");
+                    throw new Exception("Cannot establish communication");
                 }
 
 
