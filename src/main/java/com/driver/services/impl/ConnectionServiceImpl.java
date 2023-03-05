@@ -70,7 +70,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         user.setMaskedIp(CountryName.valueOf(countryName.substring(0,3).toUpperCase()).toCode()+"."+idOfThisServiceProvider+"."+userId);
         User user1 = userRepository2.save(user);
-        return user1;
+        return userRepository2.findById(user1.getId()).get();
 
     }
     @Override
