@@ -28,7 +28,6 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         String countryOfUser = user.getOriginalCountry().getCountryName().toString();
         if(countryOfUser.equalsIgnoreCase(countryName)){
-            user.setConnected(true);
             return user;
         }
         //--------------------------------------------=======================================
