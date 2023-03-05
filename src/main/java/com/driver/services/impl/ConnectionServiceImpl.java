@@ -64,7 +64,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 //        user.setOriginalIp(CountryName.valueOf(countryName.toUpperCase().substring(0,3)).toCode()+"."+userId);
 //        user.setOriginalCountry(countryProviderServes);
 
-        user.getServiceProviderList().add(serviceProviderUserIsGettingConnectedToKnow);
+//        user.getServiceProviderList().add(serviceProviderUserIsGettingConnectedToKnow);
         serviceProviderUserIsGettingConnectedToKnow.getConnectionList().add(connection);
 
 //        Connection connection1 = connectionRepository2.save(connection);
