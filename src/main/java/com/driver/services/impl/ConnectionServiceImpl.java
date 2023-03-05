@@ -26,7 +26,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             throw new Exception("Already connected");
         }
 
-        String countryOfUser = user.getOriginalCountry().getCountryName().toString();
+        String countryOfUser = user.getOriginalCountry().getCountryName().toString().substring(0,3);
         if(countryOfUser.equalsIgnoreCase(countryName.toUpperCase().substring(0,3))){
             return user;
         }
