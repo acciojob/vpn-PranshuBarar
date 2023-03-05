@@ -1,9 +1,6 @@
 package com.driver.services.impl;
 
-import com.driver.model.Country;
-import com.driver.model.CountryName;
-import com.driver.model.ServiceProvider;
-import com.driver.model.User;
+import com.driver.model.*;
 import com.driver.repository.CountryRepository;
 import com.driver.repository.ServiceProviderRepository;
 import com.driver.repository.UserRepository;
@@ -63,8 +60,11 @@ public class UserServiceImpl implements UserService {
         User user = userRepository3.findById(userId).get();
         ServiceProvider serviceProvider = serviceProviderRepository3.findById(serviceProviderId).get();
         user.getServiceProviderList().add(serviceProvider);
-
-
+        Connection connection = new Connection();
+        connection.setUser(user);
+        connection.setServiceProvider(serviceProvider);
+        user.getConnectionList().add(connection);
+        user.getServiceProviderList().add(serviceProvider);
         userRepository3.save(user);
         return user;
     }
