@@ -85,12 +85,13 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         user.setConnected(false);
         user.setMaskedIp(null);
-        user.getConnectionList().clear();
-        user.getServiceProviderList().clear();
-//        user.setOriginalCountry(returnCountry(user.getOriginalIp().substring(0,3)));
-//        user.setOriginalCountry(returnCountry(user.getOriginalIp().substring(0,3)));
-        user.getServiceProviderList().clear();
-        user.getConnectionList().clear();
+
+//        user.getConnectionList().clear();
+//        user.getServiceProviderList().clear();
+////        user.setOriginalCountry(returnCountry(user.getOriginalIp().substring(0,3)));
+////        user.setOriginalCountry(returnCountry(user.getOriginalIp().substring(0,3)));
+//        user.getServiceProviderList().clear();
+//        user.getConnectionList().clear();
 
         userRepository2.save(user);
         return user;
