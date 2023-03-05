@@ -41,7 +41,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         int idOfThisServiceProvider = Integer.MAX_VALUE;
         for(ServiceProvider serviceProvider : serviceProviderListOfUser){
             for(Country countryThisProviderServes : serviceProvider.getCountryList()){
-                if(countryThisProviderServes.getCountryName().toString().equalsIgnoreCase(countryName.substring(0,3))
+                if(countryThisProviderServes.getCountryName().toString().equalsIgnoreCase(countryName)
                         && serviceProvider.getId()<idOfThisServiceProvider){
                     if(!anyOneOfTheServiceProviderHasThisCountry){
                         anyOneOfTheServiceProviderHasThisCountry = true;
