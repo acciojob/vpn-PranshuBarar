@@ -120,7 +120,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             currCountryOfReceiver = receiver.getOriginalIp().substring(0,3);
         }
         else {
-            currCountryOfReceiver = receiver.getMaskedIp().substring(0,3);
+            currCountryOfReceiver = returnCountry(receiver.getMaskedIp().substring(0,3)).getCountryName().toString().substring(0,3);
         }
         //getOriginalCountry().getCountryName().toString().substring(0,3).toUpperCase()
         String countryOfSender = sender.getOriginalCountry().getCountryName().toString().substring(0,3).toUpperCase();
@@ -135,11 +135,14 @@ public class ConnectionServiceImpl implements ConnectionService {
             Country countrySenderIsToBeConnected = null;
             ServiceProvider serviceProviderForSender = null;
             for(ServiceProvider serviceProvider : listOfServiceProviderReceiverIsConnectedTo){
-                if(serviceProvider.getId()<minServiceProviderId){
-                    countrySenderIsToBeConnected = serviceProvider.getCountryList().get(0);
-                    serviceProviderForSender = serviceProvider;
-                    minServiceProviderId = serviceProvider.getId(); ///This was the place I got stuck for 4 hours :)
-                }
+//                for(Country country : serviceProvider.getCountryList()){
+                    if(serviceProvider.getId()<minServiceProviderId){
+                        countrySenderIsToBeConnected = serviceProvider.getCountryList().get(0);
+                        serviceProviderForSender = serviceProvider;
+                        minServiceProviderId = serviceProvider.getId(); ///This was the place I got stuck for 4 hours :)
+                    }
+//                }
+
             }
             if(serviceProviderForSender == null || countrySenderIsToBeConnected == null){
                 throw new Exception("Cannot establish communication");
@@ -147,11 +150,9 @@ public class ConnectionServiceImpl implements ConnectionService {
             sender.setConnected(true);
             sender.setOriginalCountry(countrySenderIsToBeConnected);
             sender.getServiceProviderList().add(serviceProviderForSender);
-            return userRepository2.save(sender);
+            userRepository2.save(sender);
         }
-        else {
-            return sender;
-        }
+        return sender;
 
     }
 
