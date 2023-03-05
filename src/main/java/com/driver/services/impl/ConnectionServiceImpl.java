@@ -30,17 +30,12 @@ public class ConnectionServiceImpl implements ConnectionService {
         if(countryOfUser.equalsIgnoreCase(countryName.toUpperCase().substring(0,3))){
             return user;
         }
-
-//        if(!caseIgnoreCheckAndEnumCheck(countryName)){
-//            throw new Exception("Unable to connect");
-//        }
         //--------------------------------------------=======================================
         if(user.getServiceProviderList().isEmpty()){
             throw new Exception("Unable to connect");
         }
         List<ServiceProvider> serviceProviderListOfUser = user.getServiceProviderList();
         boolean anyOneOfTheServiceProviderHasThisCountry = false;
-//        String nameOfServiceProviderServingThisCountry = null;
         Country countryProviderServes = null;
         ServiceProvider serviceProviderUserIsGettingConnectedToKnow = null;
         int idOfThisServiceProvider = Integer.MAX_VALUE;
@@ -52,7 +47,6 @@ public class ConnectionServiceImpl implements ConnectionService {
                         anyOneOfTheServiceProviderHasThisCountry = true;
                     }
                     countryProviderServes = countryThisProviderServes;
-//                    nameOfServiceProviderServingThisCountry = serviceProvider.getName();
                     idOfThisServiceProvider = serviceProvider.getId();
                     serviceProviderUserIsGettingConnectedToKnow = serviceProvider;
                 }
@@ -91,21 +85,9 @@ public class ConnectionServiceImpl implements ConnectionService {
         user.getConnectionList().clear();
         user.getServiceProviderList().clear();
 //        user.setOriginalCountry(returnCountry(user.getOriginalIp().substring(0,3)));
-        user.setOriginalCountry(null);
+        user.setOriginalCountry(returnCountry(user.getOriginalIp().substring(0,3)));
         user.getServiceProviderList().clear();
         user.getConnectionList().clear();
-
-//        List<ServiceProvider> serviceProviderListToWhomUserIsConnectedTo = user.getServiceProviderList();
-//        for(ServiceProvider serviceProvider : serviceProviderListToWhomUserIsConnectedTo){
-//            List<User> userList = serviceProvider.getUsers();
-//            userList.removeIf(user1 -> user1.getId() == userId);
-////            Iterator<User> iterator = userList.iterator();
-////            while(iterator.hasNext()){
-////                if(iterator.next().getId() == userId){
-////                    iterator.remove();
-////                }
-////            }
-//        }
 
         userRepository2.save(user);
         return user;
@@ -137,7 +119,7 @@ public class ConnectionServiceImpl implements ConnectionService {
                      minServiceProviderId = serviceProvider.getId(); ///This was the place I got stuck for 4 hours :)
                 }
             }
-            if(serviceProviderForSender == null || countrySenderIsToBeConnected == null){
+            if(serviceProviderForSender == null){
                 throw new Exception("Cannot establish communication");
             }
             sender.setConnected(true);
@@ -146,15 +128,6 @@ public class ConnectionServiceImpl implements ConnectionService {
             userRepository2.save(sender);
         }
         return sender;
-    }
-
-    public boolean caseIgnoreCheckAndEnumCheck(String countryName){
-        for (CountryName countryName1 : CountryName.values()) {
-            if (countryName1.name().equals(countryName)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public Country returnCountry(String code){
