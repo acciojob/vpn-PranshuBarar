@@ -109,6 +109,9 @@ public class ConnectionServiceImpl implements ConnectionService {
         if(!currCountryOfReceiver.equals(countryOfSender)){
             //Sender is not connected this time to any vpn
             List<ServiceProvider> listOfServiceProviderReceiverIsConnectedTo = receiver.getServiceProviderList();
+            if(listOfServiceProviderReceiverIsConnectedTo.size()==0){
+                throw new Exception("Cannot establish communication");
+            }
             int minServiceProviderId = Integer.MAX_VALUE;
             Country countrySenderIsToBeConnected = null;
             ServiceProvider serviceProviderForSender = null;
@@ -118,9 +121,6 @@ public class ConnectionServiceImpl implements ConnectionService {
                      serviceProviderForSender = serviceProvider;
                      minServiceProviderId = serviceProvider.getId(); ///This was the place I got stuck for 4 hours :)
                 }
-            }
-            if(serviceProviderForSender == null){
-                throw new Exception("Cannot establish communication");
             }
             sender.setConnected(true);
             sender.setOriginalCountry(countrySenderIsToBeConnected);
