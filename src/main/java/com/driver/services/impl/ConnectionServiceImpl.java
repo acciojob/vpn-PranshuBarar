@@ -98,7 +98,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             }
             User connectedSender;
             try {
-                connectedSender = connect(senderId,receiver.getOriginalCountry().getCountryName().toString());
+                connectedSender = connect(senderId,receiver.getOriginalCountry().getCountryName().toString().toUpperCase());
             } catch(Exception e){
                 throw new Exception("Cannot establish communication");
             }
@@ -118,7 +118,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             String countryNameToGetConnected = null;
             for(ServiceProvider serviceProvider : serviceProviderList){
                 if(serviceProvider.getId()<id){
-                    countryNameToGetConnected = serviceProvider.getCountryList().get(0).toString();
+                    countryNameToGetConnected = serviceProvider.getCountryList().get(0).toString().toUpperCase();
                     id = serviceProvider.getId();
                 }
             }
