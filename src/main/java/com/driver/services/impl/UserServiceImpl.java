@@ -11,6 +11,8 @@ import com.driver.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -23,9 +25,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(String username, String password, String countryName) throws Exception{
-//        if(!caseIgnoreCheckAndEnumCheck(countryName)){
-//            throw new Exception();
-//        }
 
         Country country = new Country();
         if(!caseIgnoreCheckAndEnumCheck(countryName.toUpperCase().substring(0,3))){
@@ -34,8 +33,6 @@ public class UserServiceImpl implements UserService {
         country.setCountryName(CountryName.valueOf(countryName.toUpperCase().substring(0,3)));
         country.setCode(CountryName.valueOf(countryName.toUpperCase().substring(0,3)).toCode());
 
-
-
         User user = new User();
         user.setPassword(password);//
         user.setUsername(username);//
@@ -43,10 +40,17 @@ public class UserServiceImpl implements UserService {
         user.setConnected(false);//
         user.setMaskedIp(null);//
         country.setUser(user);
-//        Country country1 = countryRepository3.save(country);
-//        int id = country1.getUser().getId();
 
-
+        List<ServiceProvider> serviceProviderList = serviceProviderRepository3.findAll();
+        for(ServiceProvider serviceProvider : serviceProviderList){
+            List<Country> countryList = serviceProvider.getCountryList();
+            for(Country country1 : countryList){
+                if(country1.getCountryName().toCode().equals(country.getCode())){
+                    user.getServiceProviderList().add(serviceProvider);
+                    break;
+                }
+            }
+        }
         User userFromRepo = userRepository3.save(user);
         userFromRepo.setOriginalIp(country.getCode()+"."+userFromRepo.getId());
         return userFromRepo;
