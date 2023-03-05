@@ -29,9 +29,30 @@ public class UserServiceImpl implements UserService {
 //        if(!caseIgnoreCheckAndEnumCheck(countryName.toUpperCase().substring(0,3))){
 //            throw new Exception();
 //        }
-        country.setCountryName(CountryName.valueOf(countryName.toUpperCase().substring(0,3)));
-        country.setCode(CountryName.valueOf(countryName.toUpperCase().substring(0,3)).toCode());
+//        country.setCountryName(CountryName.valueOf(countryName.toUpperCase().substring(0,3)));
+//        country.setCode(CountryName.valueOf(countryName.toUpperCase().substring(0,3)).toCode());
 
+        if(countryName.equalsIgnoreCase("IND")){
+            country.setCountryName(CountryName.IND);
+            country.setCode(CountryName.IND.toCode());
+        }
+        else if(countryName.equalsIgnoreCase("AUS")){
+            country.setCountryName(CountryName.AUS);
+            country.setCode(CountryName.AUS.toCode());
+        } else if (countryName.equalsIgnoreCase("USA")) {
+            country.setCountryName(CountryName.USA);
+            country.setCode(CountryName.USA.toCode());
+        }
+        else if(countryName.equalsIgnoreCase("CHI")){
+            country.setCountryName(CountryName.CHI);
+            country.setCode(CountryName.CHI.toCode());
+        } else if (countryName.equalsIgnoreCase("JPN")) {
+            country.setCountryName(CountryName.JPN);
+            country.setCode(CountryName.JPN.toCode());
+        }
+        else{
+            throw new Exception("Country not found");
+        }
         User user = new User();
         user.setPassword(password);//
         user.setUsername(username);//
