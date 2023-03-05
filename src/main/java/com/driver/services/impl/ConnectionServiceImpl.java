@@ -94,38 +94,38 @@ public class ConnectionServiceImpl implements ConnectionService {
     public User communicate(int senderId, int receiverId) throws Exception {
         User sender = userRepository2.findById(senderId).get();
         User receiver = userRepository2.findById(receiverId).get();
-        String currCountryOfReceiver;
 
-        if(receiver.getMaskedIp()==null){
-            currCountryOfReceiver = receiver.getOriginalIp().substring(0,3);
-        }
-        else {
-            currCountryOfReceiver = returnCountry(receiver.getMaskedIp().substring(0,3)).getCountryName().toString().substring(0,3);
-        }
-        String countryOfSender = sender.getOriginalCountry().getCountryName().toString().substring(0,3).toUpperCase();
-
-        if(!currCountryOfReceiver.equals(countryOfSender)){
-            //Sender is not connected this time to any vpn
-            List<ServiceProvider> listOfServiceProviderReceiverIsConnectedTo = receiver.getServiceProviderList();
-            if(listOfServiceProviderReceiverIsConnectedTo.size()==0){
+        if(!receiver.getConnected()){
+            if(sender.getOriginalCountry().getCode().equals(receiver.getOriginalCountry().getCode())){
+                return sender;
+            }
+            User connectedSender = connect(senderId,receiver.getOriginalCountry().getCountryName().toString());
+            if(!connectedSender.getConnected()){
                 throw new Exception("Cannot establish communication");
             }
-            int minServiceProviderId = Integer.MAX_VALUE;
-            Country countrySenderIsToBeConnected = null;
-            ServiceProvider serviceProviderForSender = null;
-            for(ServiceProvider serviceProvider : listOfServiceProviderReceiverIsConnectedTo){
-                if(serviceProvider.getId()<minServiceProviderId){
-                     countrySenderIsToBeConnected = serviceProvider.getCountryList().get(0);
-                     serviceProviderForSender = serviceProvider;
-                     minServiceProviderId = serviceProvider.getId(); ///This was the place I got stuck for 4 hours :)
+            userRepository2.save(connectedSender);
+            return connectedSender;
+
+        }
+        else {
+            if(sender.getOriginalCountry().getCode().equals(receiver.getMaskedIp().substring(0,3))){
+                return sender;
+            }
+            List<ServiceProvider> serviceProviderList = receiver.getServiceProviderList();
+            int id = Integer.MAX_VALUE;
+            String countryNameToGetConnected = null;
+            for(ServiceProvider serviceProvider : serviceProviderList){
+                if(serviceProvider.getId()<id){
+                    countryNameToGetConnected = serviceProvider.getCountryList().get(0).toString();
+                    id = serviceProvider.getId();
                 }
             }
-            sender.setConnected(true);
-            sender.setOriginalCountry(countrySenderIsToBeConnected);
-            sender.getServiceProviderList().add(serviceProviderForSender);
-            userRepository2.save(sender);
+            User connectSender = connect(senderId, countryNameToGetConnected);
+            if(!connectSender.getConnected()){
+                throw new Exception("Cannot establish communication");
+            }
+            return connectSender;
         }
-        return sender;
     }
 
     public Country returnCountry(String code){

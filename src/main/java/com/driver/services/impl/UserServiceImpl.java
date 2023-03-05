@@ -1,6 +1,7 @@
 package com.driver.services.impl;
 
 import com.driver.model.*;
+import com.driver.repository.ConnectionRepository;
 import com.driver.repository.CountryRepository;
 import com.driver.repository.ServiceProviderRepository;
 import com.driver.repository.UserRepository;
@@ -19,6 +20,9 @@ public class UserServiceImpl implements UserService {
     ServiceProviderRepository serviceProviderRepository3;
     @Autowired
     CountryRepository countryRepository3;
+
+    @Autowired
+    ConnectionRepository connectionRepository;
 
     @Override
     public User register(String username, String password, String countryName) throws Exception{
