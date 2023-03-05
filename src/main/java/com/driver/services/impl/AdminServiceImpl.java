@@ -51,14 +51,11 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public ServiceProvider addCountry(int serviceProviderId, String countryName) throws Exception{
 //        !caseIgnoreCheckAndEnumCheck(countryName.toUpperCase().substring(0,3))
-        boolean flag = false;
-        if(CountryName.AUS.toString().equalsIgnoreCase(countryName) ||
-        CountryName.USA.toString().equalsIgnoreCase(countryName) ||
-        CountryName.IND.toString().equalsIgnoreCase(countryName) ||
-        CountryName.CHI.toString().equalsIgnoreCase(countryName) ||
-        CountryName.JPN.toString().equalsIgnoreCase(countryName)){
-            flag = true;
-        }
+        boolean flag = CountryName.AUS.toString().equalsIgnoreCase(countryName) ||
+                CountryName.USA.toString().equalsIgnoreCase(countryName) ||
+                CountryName.IND.toString().equalsIgnoreCase(countryName) ||
+                CountryName.CHI.toString().equalsIgnoreCase(countryName) ||
+                CountryName.JPN.toString().equalsIgnoreCase(countryName);
         if(!flag){
             throw new Exception("Country not found");
         }
@@ -78,7 +75,10 @@ public class AdminServiceImpl implements AdminService {
         country.setCode(CountryName.valueOf(countryName.toUpperCase().substring(0,3)).toCode());
         countryList.add(country);
 
-        return serviceProviderRepository1.save(serviceProvider);
+        country.setServiceProvider(serviceProvider);
+//        serviceProvider.getCountryList().add(country);
+        serviceProviderRepository1.save(serviceProvider);
+        return serviceProvider;
     }
 
     public boolean caseIgnoreCheckAndEnumCheck(String countryName){
