@@ -61,8 +61,9 @@ public class ConnectionServiceImpl implements ConnectionService {
         Connection connection = new Connection();
         connection.setUser(user);
         connection.setServiceProvider(serviceProviderUserIsGettingConnectedToKnow);
-        user.getConnectionList().add(connection);
-        connectionRepository2.save(connection);
+        Connection connection1 = connectionRepository2.save(connection);
+        user.getConnectionList().add(connection1);
+
 
 //        if(!caseIgnoreCheckAndEnumCheck(countryName.substring(0,3))){
 //            throw new Exception("Unable to connect");

@@ -19,16 +19,16 @@ public class User {
 
     private String maskedIp;
 
-    private Boolean connected;
+    private Boolean connected;//
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    List<Connection> connectionList = new ArrayList<>();
+    List<Connection> connectionList = new ArrayList<>();//
 
     @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
-    List<ServiceProvider> serviceProviderList = new ArrayList<>();
+    List<ServiceProvider> serviceProviderList = new ArrayList<>();//
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    Country originalCountry;
+    Country originalCountry;//
 
     public User() {
     }
