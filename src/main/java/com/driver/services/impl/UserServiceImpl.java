@@ -26,11 +26,6 @@ public class UserServiceImpl implements UserService {
     public User register(String username, String password, String countryName) throws Exception{
 
         Country country = new Country();
-//        if(!caseIgnoreCheckAndEnumCheck(countryName.toUpperCase().substring(0,3))){
-//            throw new Exception();
-//        }
-//        country.setCountryName(CountryName.valueOf(countryName.toUpperCase().substring(0,3)));
-//        country.setCode(CountryName.valueOf(countryName.toUpperCase().substring(0,3)).toCode());
 
         if(countryName.equalsIgnoreCase("IND")){
             country.setCountryName(CountryName.IND);
@@ -60,16 +55,6 @@ public class UserServiceImpl implements UserService {
         user.setConnected(false);//
         country.setUser(user);//
 
-//        List<ServiceProvider> serviceProviderList = serviceProviderRepository3.findAll();
-//        for(ServiceProvider serviceProvider : serviceProviderList){
-//            List<Country> countryList = serviceProvider.getCountryList();
-//            for(Country country1 : countryList){
-//                if(country1.getCountryName().toCode().equals(country.getCode())){
-//                    user.getServiceProviderList().add(serviceProvider);
-//                    break;
-//                }
-//            }
-//        }
         User userFromRepo = userRepository3.save(user);
         user.setOriginalIp(country.getCode()+"."+userFromRepo.getId());
         userRepository3.save(user);
@@ -82,11 +67,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository3.findById(userId).get();
         ServiceProvider serviceProvider = serviceProviderRepository3.findById(serviceProviderId).get();
         user.getServiceProviderList().add(serviceProvider);
-//        Connection connection = new Connection();
-//        connection.setUser(user);
-//        connection.setServiceProvider(serviceProvider);
-//        user.getConnectionList().add(connection);
-//        user.getServiceProviderList().add(serviceProvider);
 
         serviceProvider.getUsers().add(user);
 

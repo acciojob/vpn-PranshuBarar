@@ -42,8 +42,6 @@ public class AdminServiceImpl implements AdminService {
         serviceProvider.setName(providerName);
         serviceProvider.setAdmin(admin);
         admin.getServiceProviders().add(serviceProvider);
-//        serviceProviderRepository1.save(serviceProvider); service provider will be saved automatically, we
-        //don't have to do this explicitly because serviceProvider is child of admin
         adminRepository1.save(admin);
         return admin;
     }
@@ -88,19 +86,7 @@ public class AdminServiceImpl implements AdminService {
         country.setServiceProvider(serviceProvider);
 
         List<Country> countryList = serviceProvider.getCountryList();
-
-//        country.setCountryName(CountryName.valueOf(countryName.toUpperCase().substring(0,3)));
-////        try {
-////            country.setCountryName(CountryName.caseIgnoreCheck(countryName));
-////        } catch (Exception e){
-////            throw new Exception("Country not found");
-////        }
-//
-//        country.setCode(CountryName.valueOf(countryName.toUpperCase().substring(0,3)).toCode());
         countryList.add(country);
-
-
-//        serviceProvider.getCountryList().add(country);
         serviceProviderRepository1.save(serviceProvider);
         return serviceProvider;
     }
